@@ -230,15 +230,15 @@ O endpoint de consulta da cotação de seguro deverá conter os seguintes campos
 
 Abaixo deixamos um resumo de todos os requisitos para que você possa fazer um checklist antes de entregar o desafio:
 
-| Requisito                                                                           | Observações                                                                         |
-|-------------------------------------------------------------------------------------| ------------------------------------------------------------------------------------|
-| - [ ] Desenvolvimento do endpoint para receber as cotações de seguro                | Caso prefira pode documentar a a API com OpenAPI                                    |
-| - [ ] Validação do produto e oferta da requisião                                    | O serviço de catálogo já é dado no desafio em uma imagem Docker                     |
-| - [ ] Persistência da cotação de seguro recebida                                    | O banco de dados pode ser de sua preferência, porém deve utilizar uma imagem Docker |
-| - [ ] Envio da mensagem da cotação recebida no tópico kafka                         | Apache Kafka e serviço apólice já estão disponibilizados no desafio                 |
-| - [ ] Recebimento da mensagem da apólice emitida no tópico kafka                    | Apache Kafka e serviço apólice já estão disponibilizados no desafio                 |
-| - [ ] Atualização da cotação de seguro no banco de dados com os dados da apólice    | Apache Kafka e serviço apólice já estão disponibilizados no desafio                 |
-| - [ ] Desenvolvimento do(s) endpoint(s) para consulta da(s) cotação(ões) de seguro  | Apache Kafka e serviço apólice já estão disponibilizados no desafio                 |
+| Requisito                                                                                           | Observações                                                                         |
+|-----------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| <ul><li>[ ] Desenvolvimento do endpoint para receber as cotações de seguro</li></ul>                | Caso prefira pode documentar a a API com OpenAPI                                    |
+| <ul><li>[ ] Validação do produto e oferta da requisião</li></ul>                                    | O serviço de catálogo já é dado no desafio em uma imagem Docker                     |
+| <ul><li>[ ] Persistência da cotação de seguro recebida</li></ul>                                    | O banco de dados pode ser de sua preferência, porém deve utilizar uma imagem Docker |
+| <ul><li>[ ] Envio da mensagem da cotação recebida no tópico kafka</li></ul>                         | Apache Kafka e serviço apólice já estão disponibilizados no desafio                 |
+| <ul><li>[ ] Recebimento da mensagem da apólice emitida no tópico kafka</li></ul>                    | Apache Kafka e serviço apólice já estão disponibilizados no desafio                 |
+| <ul><li>[ ] Atualização da cotação de seguro no banco de dados com os dados da apólice</li></ul>    |                                                                                     |
+| <ul><li>[ ] Desenvolvimento do(s) endpoint(s) para consulta da(s) cotação(ões) de seguro</li></ul>  | Caso prefira pode documentar a a API com OpenAPI                                    |
 
 ### <a name="pontos_atencao">Pontos que daremos mais atenção</a>
 - Testes de unidade e integração
