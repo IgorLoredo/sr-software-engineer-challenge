@@ -19,15 +19,16 @@ Tecnologias necessárias para o desafio:
 - JDK11 ou JDK17
 - Docker
 - Maven ou Gradle
-- Postman ou Insomnia
+- IntelliJ ou Eclipse (ou qualquer outra IDE de sua preferência)
+- Postman ou Insomnia (ou qualquer outra ferramenta de sua preferência)
 
 ### <a name="desafio">Desafio</a>
 
-A seguradora ACME precisa de uma API REST capaz de receber e consultar cotações de seguro e integerir com outros sistemas conforme o desenho abaixo:
+A seguradora ACME precisa de uma API REST capaz de receber e consultar cotações de seguro e interagir com outros sistemas conforme o desenho abaixo:
 
 <img src="/assets/img/arch.png" alt="Arquitetura Proposta" title="Arquitetura Proposta"/>
 
-O corpo da requisição deve seguir o seguinte formato:
+O corpo da requisição a ser recebida deve seguir o seguinte formato:
 
 ```json
 {
@@ -65,7 +66,7 @@ O corpo da requisição deve seguir o seguinte formato:
 
 Ao receber a requisição é necessário verificar se a oferta e o produto informados são válidos, para isto é necessário consultar a API do serviço de Catálogo. 
 
-Também é necessário se o ***valor total do prêmio mensal** está entre o **máximo** e **mínimo** definido para a oferta e se o **valor total das coberturas** está correto, ou seja, se realmente é a soma das coberturas informadas.
+Também é necessário se o **valor total do prêmio mensal** está entre o **máximo** e **mínimo** definido para a oferta e se o **valor total das coberturas** está correto, ou seja, se realmente é a soma das coberturas informadas.
 
 Os demais campos como coberturas, assistências e dados do cliente são **livres**.
 
@@ -84,9 +85,9 @@ Após isso você pode consultar a documentação da API de catálogo através do
 
 <img src="/assets/img/swagger.png"/>
 
-Caso a solicitação seja válida é necessário persistir a cotação em um banco de dados gerando um identificador único em formato UUID e publicar um evento via tópico kafka da cotação recebida.
+Caso a solicitação seja válida é necessário persistir a cotação em um banco de dados de sua preferência gerando um identificador único em formato UUID e publicar um evento via tópico kafka da cotação recebida.
 
-Caso a solicitação seja inválida é necessário retornar um erro na chamada da API.
+Se a solicitação for inválida é necessário retornar um erro na chamada da API para que cliente corrija os dados e tente novamente.
 
 Após publicar o evento da cotação recebida o serviço de apólices irá gerar a apólice e publicar um evento de apólice emitida em outro tópico kafka.
 
@@ -94,7 +95,7 @@ O serviço de cotação deverá então receber este evento (apólice emitida) e 
 
 Abaixo os tópicos e avros necessários para esta integração:
 
-| **Tópico**                          | **Descrição**                | **Avro**                                                                                |
+| Tópico                              | Descrição                    | Avro                                                                                    |
 |-------------------------------------|------------------------------|-----------------------------------------------------------------------------------------|
 | itausegdev-insurance-quote-received | Tópico de cotações recebidas | [Clique Aqui](assets/avro/br.itausegdev.quotes.schemas.insurance_quote_received.avsc)   |  
 | itausegdev-insurance-policy-emitted | Tópico de apólices emitidas  | [Clique Aqui](assets/avro/br.itausegdev.policies.schemas.insurance_policy_emitted.avsc) |  
@@ -105,7 +106,7 @@ Para iniciar o serviço de apólices utilize o comando abaixo:
  docker run -p 8084:8084 itausegdev/insurance-policy-service:1716495756
 ```
 
-Adicionalmente você pode utilizar o seguinte arquivo yml para preparar o ambiente com o Apache Kafka:
+Adicionalmente você pode utilizar o seguinte arquivo `yml` para preparar o ambiente com o Apache Kafka:
 
 ```yaml
 version: "3.8"
@@ -185,7 +186,7 @@ services:
       PORT: 9021
 ```      
 
-**Observação**: Caso prefira você pode adicionar os serviços de catálogo e apólice neste docker-compose. Não se preocupe com a criação dos tópicos, o serviço de apólices irá criá-los automaticamente durante o startup.
+**Observação**: Caso prefira você pode adicionar os serviços de catálogo e apólice neste arquivo para facilitar a gestão das imagens Docker. Não se preocupe com a criação dos tópicos, pois o serviço de apólices irá criá-los automaticamente durante o startup.
 
 O endpoint de consulta da cotação de seguro deverá conter os seguintes campos:
 
