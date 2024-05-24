@@ -232,13 +232,13 @@ Abaixo deixamos um resumo de todos os requisitos para que você possa fazer um c
 
 | Requisito                                                                                           | Observações                                                                         |
 |-----------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| <ul><li>[ ] Desenvolvimento do endpoint para receber as cotações de seguro</li></ul>                | Caso prefira pode documentar a a API com OpenAPI                                    |
+| <ul><li>[ ] Desenvolvimento do endpoint para receber as cotações de seguro</li></ul>                | Caso prefira pode documentar a API com OpenAPI                                    |
 | <ul><li>[ ] Validação do produto e oferta da requisião</li></ul>                                    | O serviço de catálogo já é dado no desafio em uma imagem Docker                     |
 | <ul><li>[ ] Persistência da cotação de seguro recebida</li></ul>                                    | O banco de dados pode ser de sua preferência, porém deve utilizar uma imagem Docker |
 | <ul><li>[ ] Envio da mensagem da cotação recebida no tópico kafka</li></ul>                         | Apache Kafka e serviço apólice já estão disponibilizados no desafio                 |
 | <ul><li>[ ] Recebimento da mensagem da apólice emitida no tópico kafka</li></ul>                    | Apache Kafka e serviço apólice já estão disponibilizados no desafio                 |
 | <ul><li>[ ] Atualização da cotação de seguro no banco de dados com os dados da apólice</li></ul>    |                                                                                     |
-| <ul><li>[ ] Desenvolvimento do(s) endpoint(s) para consulta da(s) cotação(ões) de seguro</li></ul>  | Caso prefira pode documentar a a API com OpenAPI                                    |
+| <ul><li>[ ] Desenvolvimento do(s) endpoint(s) para consulta da(s) cotação(ões) de seguro</li></ul>  | Caso prefira pode documentar a API com OpenAPI                                    |
 
 ### <a name="pontos_atencao">Pontos que daremos mais atenção</a>
 - Testes de unidade e integração
