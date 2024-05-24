@@ -85,11 +85,11 @@ Após isso você pode consultar a documentação da API de catálogo através do
 
 <img src="/assets/img/swagger.png"/>
 
-Caso a solicitação seja válida é necessário persistir a cotação em um banco de dados de sua preferência gerando um identificador único em formato UUID e publicar um evento via tópico kafka da cotação recebida.
+Caso a solicitação seja válida é necessário persistir a cotação em um banco de dados de sua preferência gerando um identificador único em formato UUID e publicar um evento em formato avro via tópico kafka da cotação recebida.
 
 Se a solicitação for inválida é necessário retornar um erro na chamada da API para que cliente corrija os dados e tente novamente.
 
-Após publicar o evento da cotação recebida o serviço de apólices irá gerar a apólice e publicar um evento de apólice emitida em outro tópico kafka.
+Após publicar o evento da cotação recebida o serviço de apólices irá emitir a apólice e publicar um evento de apólice emitida em formato avro em outro tópico kafka.
 
 O serviço de cotação deverá então receber este evento (apólice emitida) e atualizar a cotação com o número da apólice gerada.
 
@@ -232,13 +232,13 @@ Abaixo deixamos um resumo de todos os requisitos para que você possa fazer um c
 
 | Requisito                                                                                           | Observações                                                                         |
 |-----------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| <ul><li>[ ] Desenvolvimento do endpoint para receber as cotações de seguro</li></ul>                | Caso prefira pode documentar a API com OpenAPI                                    |
+| <ul><li>[ ] Desenvolvimento do endpoint para receber as cotações de seguro</li></ul>                | Caso prefira pode documentar a API com OpenAPI                                      |
 | <ul><li>[ ] Validação do produto e oferta da requisião</li></ul>                                    | O serviço de catálogo já é dado no desafio em uma imagem Docker                     |
 | <ul><li>[ ] Persistência da cotação de seguro recebida</li></ul>                                    | O banco de dados pode ser de sua preferência, porém deve utilizar uma imagem Docker |
-| <ul><li>[ ] Envio da mensagem da cotação recebida no tópico kafka</li></ul>                         | Apache Kafka e serviço apólice já estão disponibilizados no desafio                 |
-| <ul><li>[ ] Recebimento da mensagem da apólice emitida no tópico kafka</li></ul>                    | Apache Kafka e serviço apólice já estão disponibilizados no desafio                 |
+| <ul><li>[ ] Envio da mensagem da cotação recebida no tópico kafka</li></ul>                         | Apache Kafka, serviço apólice e avros já estão disponibilizados no desafio          |
+| <ul><li>[ ] Recebimento da mensagem da apólice emitida no tópico kafka</li></ul>                    | Apache Kafka, serviço apólice e avros já estão disponibilizados no desafio          |
 | <ul><li>[ ] Atualização da cotação de seguro no banco de dados com os dados da apólice</li></ul>    |                                                                                     |
-| <ul><li>[ ] Desenvolvimento do(s) endpoint(s) para consulta da(s) cotação(ões) de seguro</li></ul>  | Caso prefira pode documentar a API com OpenAPI                                    |
+| <ul><li>[ ] Desenvolvimento do(s) endpoint(s) para consulta da(s) cotação(ões) de seguro</li></ul>  | Caso prefira pode documentar a API com OpenAPI                                      |
 
 ### <a name="pontos_atencao">Pontos que daremos mais atenção</a>
 - Testes de unidade e integração
