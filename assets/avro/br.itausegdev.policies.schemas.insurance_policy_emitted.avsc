@@ -1,0 +1,56 @@
+{
+  "type":"record",
+  "name":"InsurancePolicyEmitted",
+  "namespace":"br.itausegdev.policies.schemas.insurance_policy_emitted",
+  "fields":[
+    {
+      "name": "id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "insurance_quote_id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "product_id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "offer_id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "category",
+      "type": {
+        "type": "enum",
+        "name": "Category",
+        "symbols": [
+          "HOME",
+          "TRAVEL",
+          "PET",
+          "LIFE",
+          "AUTO"
+        ]
+      }
+    },
+    {
+      "name": "created_at",
+      "type": {
+        "type": "long",
+        "logicalType": "local-timestamp-millis"
+      }
+    }
+  ]
+}

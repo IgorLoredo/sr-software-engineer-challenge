@@ -1,0 +1,141 @@
+{
+  "type":"record",
+  "name":"InsuranceQuoteReceived",
+  "namespace":"br.itausegdev.quotes.schemas.insurance_quote_received",
+  "fields":[
+    {
+      "name": "id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "product_id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "offer_id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "category",
+      "type": {
+        "type": "enum",
+        "name": "Category",
+        "symbols": [
+          "HOME",
+          "TRAVEL",
+          "PET",
+          "LIFE",
+          "AUTO"
+        ]
+      }
+    },
+    {
+      "name": "created_at",
+      "type": {
+        "type": "long",
+        "logicalType": "local-timestamp-millis"
+      }
+    },
+    {
+      "name": "total_monthly_premium_amount",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 10,
+        "scale": 4
+      }
+    },
+    {
+      "name": "total_coverage_amount",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 10,
+        "scale": 4
+      }
+    },
+    {
+      "name": "coverages",
+      "type": {
+        "type": "map",
+        "values": {
+          "type": "bytes",
+          "logicalType": "decimal",
+          "precision": 10,
+          "scale": 4
+        }
+      }
+    },
+    {
+      "name": "assistances",
+      "type": {
+        "type": "array",
+        "items": "string"
+      }
+    },
+    {
+      "name": "customer",
+      "type": {
+        "type": "record",
+        "name": "Customer",
+        "fields": [
+          {
+            "name": "document_number",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": {
+              "type": "enum",
+              "name": "CustomerType",
+              "symbols": [
+                "LEGAL",
+                "NATURAL"
+              ]
+            }
+          },
+          {
+            "name": "gender",
+            "type": {
+              "type": "enum",
+              "name": "CustomerGender",
+              "symbols": [
+                "MALE",
+                "FEMALE",
+                "UNKNOWN"
+              ]
+            }
+          },
+          {
+            "name": "date_of_birth",
+            "type": {
+              "type": "int",
+              "logicalType": "date"
+            }
+          },
+          {
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "phone_number",
+            "type": "int"
+          }
+        ]
+      }
+    }
+  ]
+}
