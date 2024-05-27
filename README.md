@@ -71,9 +71,9 @@ Os seguintes itens devem ser validados:
 
 Os campos dos dados do cliente são **livres**.
 
-Caso a solicitação seja válida é necessário persistir a cotação em um banco de dados de sua preferência gerando um identificador único em formato numérico e publicar um evento em formato **avro** via tópico kafka da cotação recebida.
+Caso a solicitação seja **válida** é necessário persistir a cotação em um **banco de dados** de sua preferência gerando um identificador único em formato **numérico** e publicar um evento em formato **avro** via tópico kafka da cotação recebida.
 
-Se a solicitação for inválida é necessário retornar um erro na chamada da API para que cliente corrija os dados e tente novamente.
+Se a solicitação for **inválida** é necessário retornar um erro na chamada da API para que cliente corrija os dados e tente novamente.
 
 Após publicar o evento da cotação recebida o serviço de apólices irá emitir a apólice e publicar um evento de apólice emitida em formato **avro** em outro tópico kafka.
 
@@ -86,7 +86,7 @@ Abaixo os tópicos e avros necessários para esta integração:
 | itausegdev-insurance-quote-received | Tópico de cotações recebidas | [Clique Aqui](schemas/br.itausegdev.quotes.schemas.insurance_quote_received.avsc)   |  
 | itausegdev-insurance-policy-emitted | Tópico de apólices emitidas  | [Clique Aqui](schemas/br.itausegdev.policies.schemas.insurance_policy_emitted.avsc) |  
 
-A raiz deste projeto contém um arquivo docker-compose.yml com toda infraestrutura necessária para o desafio, basta clonar o repositório e executar o seguinte comando:
+A raiz deste projeto contém um arquivo **docker-compose.yml** com toda infraestrutura necessária para o desafio, basta clonar o repositório e executar o seguinte comando:
 
 ```shell script
  docker-compose up -d
