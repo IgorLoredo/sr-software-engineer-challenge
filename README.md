@@ -32,25 +32,20 @@ O corpo da requisição a ser recebida deve seguir o seguinte formato:
 
 ```json
 {
-    "product_id": "c53d62bd-69de-4ec6-a90a-b6aa479ab571",
-    "offer_id": "7b6eaa16-f559-462f-b610-3aaf9b81d527",
-    "category": "PET",
+    "product_id": "1b2da7cc-b367-4196-8a78-9cfeec21f587",
+    "offer_id": "adc56d77-348c-4bf0-908f-22d402ee715c",
+    "category": "HOME",
     "total_monthly_premium_amount": 75.25,
-    "total_coverage_amount": 10555.00,
-    "coverages":[
-        {
-            "exams": 5000.45
-        },
-        {
-            "vaccines": 750.25
-        },
-        {
-            "daily_hospital_stay": 350.00
-        }
-    ],
+    "total_coverage_amount": 825000.00,
+    "coverages": {
+      "Incêndio": 250000.00,
+      "Desastres naturais": 500000.00,
+      "Responsabiliadade civil": 75000.00
+    },
     "assistances": [
-        "medical appointments",
-        "pet_store_discount"
+      "Encanador",
+      "Eletricista",
+      "Chaveiro 24h"
     ],
     "customer": {
         "document_number": "36205578900",
@@ -64,19 +59,23 @@ O corpo da requisição a ser recebida deve seguir o seguinte formato:
 }
 ```
 
-Ao receber a requisição é necessário verificar se a oferta e o produto informados são válidos, para isto é necessário consultar a API do serviço de Catálogo. 
+Ao receber a requisição é necessário validar a oferta e o produto informados consultando a API do serviço de Catálogo. Os seguintes itens devem ser validados:
 
-Também é necessário se o **valor total do prêmio mensal** está entre o **máximo** e **mínimo** definido para a oferta e se o **valor total das coberturas** está correto, ou seja, se realmente é a soma das coberturas informadas.
+- O produto e oferta são existentes e estão ativos
+- As **coberturas informadas** estão dentro da lista de cobertuas da oferta
+- As **assistências informadas** estão dentro da lista de assistências da oferta
+- O **valor total do prêmio mensal** está entre o **máximo** e **mínimo** definido para a oferta
+- O **valor total das coberturas** corresponde a somatória das coberturas informadas
 
-Os demais campos como coberturas, assistências e dados do cliente são **livres**.
+Os campos dos dados do cliente são **livres**.
 
 Para iniciar o serviço de Catálogo utilze o comando abaixo:
 
 ```shell script
- docker run -p 8080:8080 itausegdev/catalog-service:1716508943
+ docker run -p 8080:8080 itausegdev/catalog-service:1716818984
 ```
 
-Após isso você pode consultar a documentação da API de catálogo através do seguinte endpoint:
+Após o serviço estar executando você pode consultar a documentação da API de catálogo através do seguinte endpoint:
 
 ```shell script
  http://localhost:8080/swagger-ui
@@ -85,7 +84,7 @@ Após isso você pode consultar a documentação da API de catálogo através do
 
 <img src="/assets/img/swagger.png"/>
 
-Caso a solicitação seja válida é necessário persistir a cotação em um banco de dados de sua preferência gerando um identificador único em formato UUID e publicar um evento em formato avro via tópico kafka da cotação recebida.
+Caso a solicitação seja válida é necessário persistir a cotação em um banco de dados de sua preferência gerando um identificador único em formato numérico e publicar um evento em formato avro via tópico kafka da cotação recebida.
 
 Se a solicitação for inválida é necessário retornar um erro na chamada da API para que cliente corrija os dados e tente novamente.
 
@@ -103,7 +102,7 @@ Abaixo os tópicos e avros necessários para esta integração:
 Para iniciar o serviço de apólices utilize o comando abaixo: 
 
 ```shell script
- docker run -p 8084:8084 itausegdev/insurance-policy-service:1716495756
+ docker run -p 8084:8084 itausegdev/insurance-policy-service:1716823125
 ```
 
 Adicionalmente você pode utilizar o seguinte arquivo `yml` para preparar o ambiente com o Apache Kafka:
@@ -192,29 +191,24 @@ O endpoint de consulta da cotação de seguro deverá conter os seguintes campos
 
 ```json
 {
-    "id": "2fc0e0f8-e1c7-4bfb-9f2d-2058f969910f",
-    "product_id": "c53d62bd-69de-4ec6-a90a-b6aa479ab571",
-    "offer_id": "7b6eaa16-f559-462f-b610-3aaf9b81d527",
-    "insurance_policy_id": "43eaf9cf-9dbe-469c-85f9-022573009d1e",
-    "category": "PET",
+    "id": 22345,
+    "insurance_policy_id": 756969,
+    "product_id": "1b2da7cc-b367-4196-8a78-9cfeec21f587",
+    "offer_id": "adc56d77-348c-4bf0-908f-22d402ee715c",
+    "category": "HOME",
     "created_at": "2024-05-22T20:37:17.090098",
     "updated_at": "2024-05-22T21:05:02.090098",
     "total_monthly_premium_amount": 75.25,
-    "total_coverage_amount": 10555.00,
-    "coverages":[
-        {
-            "exams": 5000.45
-        },
-        {
-            "vaccines": 750.25
-        },
-        {
-            "daily_hospital_stay": 350.00
-        }
-    ],
+    "total_coverage_amount": 825000.00,
+    "coverages": {
+      "Incêndio": 250000.00,
+      "Desastres naturais": 500000.00,
+      "Responsabiliadade civil": 75000.00
+    },
     "assistances": [
-        "medical appointments",
-        "pet_store_discount"
+      "Encanador",
+      "Eletricista",
+      "Chaveiro 24h"
     ],
     "customer": {
         "document_number": "36205578900",
@@ -237,7 +231,7 @@ Abaixo deixamos um resumo de todos os requisitos para que você possa fazer um c
 | <ul><li>[ ] Persistência da cotação de seguro recebida</li></ul>                                    | O banco de dados pode ser de sua preferência, porém deve utilizar uma imagem Docker |
 | <ul><li>[ ] Envio da mensagem da cotação recebida no tópico kafka</li></ul>                         | Apache Kafka, serviço apólice e avros já estão disponibilizados no desafio          |
 | <ul><li>[ ] Recebimento da mensagem da apólice emitida no tópico kafka</li></ul>                    | Apache Kafka, serviço apólice e avros já estão disponibilizados no desafio          |
-| <ul><li>[ ] Atualização da cotação de seguro no banco de dados com os dados da apólice</li></ul>    |                                                                                     |
+| <ul><li>[ ] Atualização da cotação de seguro no banco de dados com os dados da apólice</li></ul>    | O evento da apólice emitida contém a o ID da cotação                                |
 | <ul><li>[ ] Desenvolvimento do(s) endpoint(s) para consulta da(s) cotação(ões) de seguro</li></ul>  | Caso prefira pode documentar a API com OpenAPI                                      |
 
 ### <a name="pontos_atencao">Pontos que daremos mais atenção</a>
