@@ -5,17 +5,11 @@
   "fields":[
     {
       "name": "id",
-      "type": {
-        "type": "string",
-        "logicalType": "uuid"
-      }
+      "type": "long"
     },
     {
       "name": "insurance_quote_id",
-      "type": {
-        "type": "string",
-        "logicalType": "uuid"
-      }
+      "type": "long"
     },
     {
       "name": "product_id",
@@ -30,6 +24,10 @@
         "type": "string",
         "logicalType": "uuid"
       }
+    },
+    {
+      "name": "active",
+      "type": "boolean"
     },
     {
       "name": "category",

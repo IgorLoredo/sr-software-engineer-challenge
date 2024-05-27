@@ -24,7 +24,7 @@ Tecnologias necessárias para o desafio:
 
 ### <a name="desafio">Desafio</a>
 
-A seguradora ACME precisa de uma API REST capaz de receber e consultar cotações de seguro e interagir com outros sistemas conforme o desenho abaixo:
+A seguradora ACME precisa de uma API REST capaz de receber e consultar cotações de seguro interagindo com outros sistemas conforme o desenho abaixo:
 
 <img src="/assets/img/arch.png" alt="Arquitetura Proposta" title="Arquitetura Proposta"/>
 
@@ -59,9 +59,11 @@ O corpo da requisição a ser recebida deve seguir o seguinte formato:
 }
 ```
 
-Ao receber a requisição é necessário validar a oferta e o produto informados consultando a API do serviço de Catálogo. Os seguintes itens devem ser validados:
+Ao receber a requisição é necessário validar a oferta e o produto informados consultando a API do serviço de Catálogo. 
 
-- O produto e oferta são existentes e estão ativos
+Os seguintes itens devem ser validados:
+
+- O produto e oferta são **existentes** e estão **ativos**
 - As **coberturas informadas** estão dentro da lista de cobertuas da oferta
 - As **assistências informadas** estão dentro da lista de assistências da oferta
 - O **valor total do prêmio mensal** está entre o **máximo** e **mínimo** definido para a oferta
@@ -69,26 +71,11 @@ Ao receber a requisição é necessário validar a oferta e o produto informados
 
 Os campos dos dados do cliente são **livres**.
 
-Para iniciar o serviço de Catálogo utilze o comando abaixo:
-
-```shell script
- docker run -p 8080:8080 itausegdev/catalog-service:1716818984
-```
-
-Após o serviço estar executando você pode consultar a documentação da API de catálogo através do seguinte endpoint:
-
-```shell script
- http://localhost:8080/swagger-ui
-```
- **Observação:** As categorias, produtos e ofertas já estão cadastrados neste serviço, então não é necessário se preocupar em adicionar mais dados a esta API.
-
-<img src="/assets/img/swagger.png"/>
-
-Caso a solicitação seja válida é necessário persistir a cotação em um banco de dados de sua preferência gerando um identificador único em formato numérico e publicar um evento em formato avro via tópico kafka da cotação recebida.
+Caso a solicitação seja válida é necessário persistir a cotação em um banco de dados de sua preferência gerando um identificador único em formato numérico e publicar um evento em formato **avro** via tópico kafka da cotação recebida.
 
 Se a solicitação for inválida é necessário retornar um erro na chamada da API para que cliente corrija os dados e tente novamente.
 
-Após publicar o evento da cotação recebida o serviço de apólices irá emitir a apólice e publicar um evento de apólice emitida em formato avro em outro tópico kafka.
+Após publicar o evento da cotação recebida o serviço de apólices irá emitir a apólice e publicar um evento de apólice emitida em formato **avro** em outro tópico kafka.
 
 O serviço de cotação deverá então receber este evento (apólice emitida) e atualizar a cotação com o número da apólice gerada.
 
@@ -96,96 +83,27 @@ Abaixo os tópicos e avros necessários para esta integração:
 
 | Tópico                              | Descrição                    | Avro                                                                                    |
 |-------------------------------------|------------------------------|-----------------------------------------------------------------------------------------|
-| itausegdev-insurance-quote-received | Tópico de cotações recebidas | [Clique Aqui](assets/avro/br.itausegdev.quotes.schemas.insurance_quote_received.avsc)   |  
-| itausegdev-insurance-policy-emitted | Tópico de apólices emitidas  | [Clique Aqui](assets/avro/br.itausegdev.policies.schemas.insurance_policy_emitted.avsc) |  
+| itausegdev-insurance-quote-received | Tópico de cotações recebidas | [Clique Aqui](schemas/br.itausegdev.quotes.schemas.insurance_quote_received.avsc)   |  
+| itausegdev-insurance-policy-emitted | Tópico de apólices emitidas  | [Clique Aqui](schemas/br.itausegdev.policies.schemas.insurance_policy_emitted.avsc) |  
 
-Para iniciar o serviço de apólices utilize o comando abaixo: 
+A raiz deste projeto contém um arquivo docker-compose.yml com toda infraestrutura necessária para o desafio, basta clonar o repositório e executar o seguinte comando:
 
 ```shell script
- docker run -p 8084:8084 itausegdev/insurance-policy-service:1716823125
+ docker-compose up -d
 ```
 
-Adicionalmente você pode utilizar o seguinte arquivo `yml` para preparar o ambiente com o Apache Kafka:
+Após todos os serviços estarem executando você pode consultar a documentação da API de catálogo através do seguinte endpoint:
 
-```yaml
-version: "3.8"
+```shell script
+ http://localhost:8080/swagger-ui
+```
 
-services:
+ **Observação:** As categorias, produtos e ofertas já estão cadastrados no serviço de catálogo, então não é necessário se preocupar em adicionar mais dados a esta API.
 
-  zookeeper:
-    image: confluentinc/cp-zookeeper:5.4.0
-    hostname: zookeeper
-    container_name: zookeeper
-    ports:
-      - "2181:2181"
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
+<img src="/assets/img/swagger.png"/>
 
-  broker:
-    image: confluentinc/cp-server:5.4.0
-    hostname: broker
-    container_name: broker
-    depends_on:
-      - zookeeper
-    ports:
-      - "9092:9092"
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
-      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker:29092
-      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
-      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
-      CONFLUENT_METRICS_ENABLE: "true"
-      CONFLUENT_SUPPORT_CUSTOMER_ID: "anonymous"
+> **ATENÇÃO:** Não se preocupe com a criação dos tópicos e schema registry, eles já serão provisionados automaticamente ao executar os serviços.
 
-  kafka-tools:
-    image: confluentinc/cp-kafka:5.4.0
-    hostname: kafka-tools
-    container_name: kafka-tools
-    command: ["tail", "-f", "/dev/null"]
-    network_mode: "host"
-
-  schema-registry:
-    image: confluentinc/cp-schema-registry:5.4.0
-    container_name: schema-registry
-    depends_on:
-      - zookeeper
-      - broker
-    ports:
-      - "8081:8081"
-    environment:
-      SCHEMA_REGISTRY_HOST_NAME: localhost
-      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "zookeeper:2181"
-
-  control-center:
-    image: confluentinc/cp-enterprise-control-center:5.4.0
-    hostname: control-center
-    container_name: control-center
-    depends_on:
-      - zookeeper
-      - broker
-      - schema-registry
-    ports:
-      - "9021:9021"
-    environment:
-      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:29092'
-      CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://localhost:8081"
-      CONTROL_CENTER_REPLICATION_FACTOR: 1
-      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
-      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
-      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
-      PORT: 9021
-```      
-
-**Observação**: Caso prefira você pode adicionar os serviços de catálogo e apólice neste arquivo para facilitar a gestão das imagens Docker. Não se preocupe com a criação dos tópicos, pois o serviço de apólices irá criá-los automaticamente durante o startup.
 
 O endpoint de consulta da cotação de seguro deverá conter os seguintes campos:
 

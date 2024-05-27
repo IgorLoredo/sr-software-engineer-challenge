@@ -5,10 +5,7 @@
   "fields":[
     {
       "name": "id",
-      "type": {
-        "type": "string",
-        "logicalType": "uuid"
-      }
+      "type": "long"
     },
     {
       "name": "product_id",
