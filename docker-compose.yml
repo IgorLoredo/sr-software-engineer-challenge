@@ -73,7 +73,7 @@ services:
     environment:
       SCHEMA_REGISTRY_HOST_NAME: localhost
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "zookeeper:2181"
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVER: "PLAINTEXT://broker:29092"
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://broker:29092"
 
   control-center:
     image: confluentinc/cp-enterprise-control-center:7.5.4
