@@ -9,7 +9,7 @@ services:
       - "8080:8080" 
 
   insurance-policy-service:
-    image: itausegdev/insurance-policy-service:1716823125
+    image: itausegdev/insurance-policy-service:1716895859
     container_name: insurance-policy-service
     depends_on:
       - broker
@@ -55,11 +55,12 @@ services:
     container_name: kafka-tools
     depends_on:
       - broker
+      - schema-registry
+      - control-center
     volumes:
       - ./schemas:/schemas 
       - ./scripts/setup.sh:/setup.sh 
-    command: ["tail", "-f", "/dev/null"]
-    network_mode: "host"
+    entrypoint: ["/bin/sh", "/setup.sh"]
 
   schema-registry:
     image: confluentinc/cp-schema-registry:7.5.4
@@ -72,6 +73,7 @@ services:
     environment:
       SCHEMA_REGISTRY_HOST_NAME: localhost
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "zookeeper:2181"
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVER: "PLAINTEXT://broker:29092"
 
   control-center:
     image: confluentinc/cp-enterprise-control-center:7.5.4
