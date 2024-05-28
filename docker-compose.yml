@@ -13,6 +13,7 @@ services:
     container_name: insurance-policy-service
     depends_on:
       - broker
+      - schema-registry
     ports:
       - "8084:8084"    
 
