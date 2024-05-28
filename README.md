@@ -92,6 +92,12 @@ A raiz deste projeto contém um arquivo **docker-compose.yml** com toda infraest
  docker-compose up -d
 ```
 
+Caso esteja utilizando Windows na raiz do projeto execute o seguinte comando antes de iniciar o docker compose.
+
+```shell script
+  git config core.autocrlf false
+```
+
 Após todos os serviços estarem executando você pode consultar a documentação da API de catálogo através do seguinte endpoint:
 
 ```shell script
