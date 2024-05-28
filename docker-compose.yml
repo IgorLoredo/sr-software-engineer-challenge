@@ -3,19 +3,25 @@ version: "3.8"
 services:
 
   catalog-service:
-    image: itausegdev/catalog-service:1716818984
+    image: itausegdev/catalog-service:1716914640
     container_name: catalog-service
     ports:
       - "8080:8080" 
+    environment:
+      OTEL_ENDPOINT: http://localhost:4317    
 
   insurance-policy-service:
-    image: itausegdev/insurance-policy-service:1716895859
+    image: itausegdev/insurance-policy-service:1716914585
     container_name: insurance-policy-service
     depends_on:
       - broker
       - schema-registry
     ports:
       - "8084:8084"    
+    environment:
+      BOOSTRAP_SERVERS: broker:29092
+      SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      OTEL_ENDPOINT: http://localhost:4317  
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.4
