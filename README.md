@@ -108,7 +108,7 @@ Após todos os serviços estarem executando você pode consultar a documentaçã
 
 <img src="/assets/img/swagger.png"/>
 
-> **ATENÇÃO:** Não se preocupe com a criação dos tópicos e schema registry, eles já serão provisionados automaticamente ao executar os serviços.
+> **ATENÇÃO:** Não se preocupe com a criação dos tópicos e schema registry. Os tópicos serão provisionados ao subir o Docker e o schemas serão registrados ao enviar ou consumir a primeira mensagem.
 
 
 O endpoint de consulta da cotação de seguro deverá conter os seguintes campos:

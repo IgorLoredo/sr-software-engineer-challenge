@@ -11,7 +11,7 @@ services:
       OTEL_ENDPOINT: http://localhost:4317    
 
   insurance-policy-service:
-    image: itausegdev/insurance-policy-service:1716914585
+    image: itausegdev/insurance-policy-service:1717243534
     container_name: insurance-policy-service
     depends_on:
       - broker
