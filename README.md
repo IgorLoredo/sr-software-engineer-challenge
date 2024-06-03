@@ -86,16 +86,16 @@ Abaixo os tópicos e avros necessários para esta integração:
 | itausegdev-insurance-quote-received | Tópico de cotações recebidas | [Clique Aqui](schemas/br.itausegdev.quotes.schemas.insurance_quote_received.avsc)   |  
 | itausegdev-insurance-policy-emitted | Tópico de apólices emitidas  | [Clique Aqui](schemas/br.itausegdev.policies.schemas.insurance_policy_emitted.avsc) |  
 
-A raiz deste projeto contém um arquivo **docker-compose.yml** com toda infraestrutura necessária para o desafio, basta clonar o repositório e executar o seguinte comando:
-
-```shell script
- docker-compose up -d
-```
-
 Caso esteja utilizando Windows na raiz do projeto execute o seguinte comando antes de iniciar o docker compose.
 
 ```shell script
   git config core.autocrlf false
+```
+
+A raiz deste projeto contém um arquivo **docker-compose.yml** com toda infraestrutura necessária para o desafio, basta clonar o repositório e executar o seguinte comando:
+
+```shell script
+ docker-compose up -d
 ```
 
 Após todos os serviços estarem executando você pode consultar a documentação da API de catálogo através do seguinte endpoint:
