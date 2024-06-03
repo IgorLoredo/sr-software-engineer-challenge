@@ -5,40 +5,65 @@ services:
   catalog-service:
     image: itausegdev/catalog-service:1716914640
     container_name: catalog-service
+    restart: on-failure
     ports:
       - "8080:8080" 
     environment:
       OTEL_ENDPOINT: http://localhost:4317    
+    healthcheck:
+      test: curl --fail --silent http://localhost:8080/q/health/ready || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 40s   
 
   insurance-policy-service:
     image: itausegdev/insurance-policy-service:1717243534
     container_name: insurance-policy-service
+    restart: on-failure
     depends_on:
-      - broker
-      - schema-registry
+      broker:
+        condition: service_healthy
+      schema-registry:
+        condition: service_healthy
     ports:
       - "8084:8084"    
     environment:
       BOOSTRAP_SERVERS: broker:29092
       SCHEMA_REGISTRY_URL: http://schema-registry:8081
       OTEL_ENDPOINT: http://localhost:4317  
+    healthcheck:
+      test: "curl --fail --silent http://localhost:8084/actuator/health/readiness | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 40s      
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.4
     hostname: zookeeper
     container_name: zookeeper
+    restart: on-failure
     ports:
       - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    healthcheck:
+      test: nc -z localhost 2181 || exit -1
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
   broker:
     image: confluentinc/cp-server:7.5.4
     hostname: broker
     container_name: broker
+    restart: on-failure
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_healthy
     ports:
       - "9092:9092"
     environment:
@@ -55,41 +80,64 @@ services:
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
       CONFLUENT_METRICS_ENABLE: "true"
       CONFLUENT_SUPPORT_CUSTOMER_ID: "anonymous"
-
-  kafka-tools:
-    image: confluentinc/cp-kafka:7.5.4
-    hostname: kafka-tools
-    container_name: kafka-tools
-    depends_on:
-      - broker
-      - schema-registry
-      - control-center
-    volumes:
-      - ./schemas:/schemas 
-      - ./scripts/setup.sh:/setup.sh 
-    entrypoint: ["/bin/sh", "/setup.sh"]
+    healthcheck:
+      test: nc -z localhost 9092 || exit -1
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
 
   schema-registry:
     image: confluentinc/cp-schema-registry:7.5.4
     container_name: schema-registry
+    restart: on-failure
     depends_on:
-      - zookeeper
-      - broker
+      zookeeper:
+        condition: service_healthy
+      broker:
+        condition: service_healthy
     ports:
       - "8081:8081"
     environment:
       SCHEMA_REGISTRY_HOST_NAME: localhost
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "zookeeper:2181"
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://broker:29092"
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://broker:29092"  
+    healthcheck:
+      test: nc -z localhost 8081 || exit -1
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s    
+
+  kafka-tools:
+    image: confluentinc/cp-kafka:7.5.4
+    hostname: kafka-tools
+    container_name: kafka-tools
+    restart: on-failure
+    depends_on:
+      broker:
+        condition: service_healthy
+      schema-registry:
+        condition: service_healthy
+      control-center:
+        condition: service_healthy
+    volumes:
+      - ./schemas:/schemas 
+      - ./scripts/setup.sh:/setup.sh 
+    entrypoint: ["/bin/sh", "/setup.sh"]
 
   control-center:
     image: confluentinc/cp-enterprise-control-center:7.5.4
     hostname: control-center
     container_name: control-center
+    restart: on-failure
     depends_on:
-      - zookeeper
-      - broker
-      - schema-registry
+      zookeeper:
+        condition: service_healthy
+      broker:
+        condition: service_healthy
+      schema-registry:
+        condition: service_healthy
     ports:
       - "9021:9021"
     environment:
@@ -101,3 +149,9 @@ services:
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       PORT: 9021
+    healthcheck:
+      test: curl --fail http://localhost:9021/ || exit 1
+      interval: 40s
+      timeout: 30s
+      retries: 3
+      start_period: 40s     
