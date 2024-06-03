@@ -64,7 +64,7 @@ Ao receber a requisição é necessário validar a oferta e o produto informados
 Os seguintes itens devem ser validados:
 
 - O produto e oferta são **existentes** e estão **ativos**
-- As **coberturas informadas** estão dentro da lista de cobertuas da oferta
+- As **coberturas informadas** estão dentro da lista de coberturas da oferta
 - As **assistências informadas** estão dentro da lista de assistências da oferta
 - O **valor total do prêmio mensal** está entre o **máximo** e **mínimo** definido para a oferta
 - O **valor total das coberturas** corresponde a somatória das coberturas informadas
