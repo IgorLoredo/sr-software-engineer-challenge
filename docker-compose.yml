@@ -11,7 +11,7 @@ services:
     environment:
       OTEL_ENDPOINT: http://localhost:4317    
     healthcheck:
-      test: curl --fail --silent http://localhost:8080/q/health/ready || exit 1"
+      test: "curl --fail --silent http://localhost:8080/q/health/ready | grep UP || exit 1"
       interval: 20s
       timeout: 5s
       retries: 5
