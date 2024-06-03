@@ -104,6 +104,8 @@ Após todos os serviços estarem executando você pode consultar a documentaçã
  http://localhost:8080/swagger-ui
 ```
 
+Caso queira ver detalhes da infraestrutura do kafka digite o seguinte endereço no seu navegador **http://localhost:9021/** clique no cluster que será exibido e em seguida no menu **topics**
+
  **Observação:** As categorias, produtos e ofertas já estão cadastrados no serviço de catálogo, então não é necessário se preocupar em adicionar mais dados a esta API.
 
 <img src="/assets/img/swagger.png"/>
